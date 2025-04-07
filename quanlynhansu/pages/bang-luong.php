@@ -25,7 +25,13 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 	}
 
 	// show data
-	$showData = "SELECT ma_luong, hinh_anh, nv.id as idNhanVien, ten_nv, ten_chuc_vu, luong_thang, ngay_cong, phu_cap, khoan_nop, tam_ung, thuc_lanh, ngay_cham FROM luong l, nhanvien nv, chuc_vu cv WHERE nv.id = l.nhanvien_id AND nv.chuc_vu_id = cv.id ORDER BY l.id DESC";
+	$showData = "SELECT ma_luong, hinh_anh, nv.id as idNhanVien, ten_nv, ten_chuc_vu, luong_thang, ngay_cong, phu_cap, khoan_nop, tam_ung, thuc_lanh, ngay_cham FROM luong l, nhanvien nv, chuc_vu cv WHERE nv.id = l.nhanvien_id AND nv.chuc_vu_id = cv.id";
+
+	if ($row_acc['quyen'] != 1) {
+		$showData .= " AND nv.chuc_vu_id = 33";
+	}
+
+	$showData .= " ORDER BY l.id DESC";
 	$result = mysqli_query($conn, $showData);
 	$arrShow = array();
 	while ($row = mysqli_fetch_array($result)) {
@@ -195,14 +201,11 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 												</td>
 												<td>
 													<?php
-													if ($row_acc['quyen'] == 1) {
-														echo "<form method='POST'>";
-														echo "<input type='hidden' value='" . $arrS['idNhanVien'] . "' name='maNhanVien'/>";
-														echo "<button type='submit' class='btn btn-primary btn-flat'  name='chiTietLuong'><i class='fa fa-eye'></i></button>";
-														echo "</form>";
-													} else {
-														echo "<button type='button' class='btn btn-primary btn-flat' disabled><i class='fa fa-eye'></i></button>";
-													}
+
+													echo "<form method='POST'>";
+													echo "<input type='hidden' value='" . $arrS['idNhanVien'] . "' name='maNhanVien'/>";
+													echo "<button type='submit' class='btn btn-primary btn-flat'  name='chiTietLuong'><i class='fa fa-eye'></i></button>";
+													echo "</form>";
 													?>
 
 												</td>
