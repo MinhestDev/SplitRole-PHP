@@ -175,9 +175,13 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 											<th>Mã lương</th>
 											<th>Tên nhân viên</th>
 											<th>Chức vụ</th>
-											<th>Lương tháng</th>
+											<?php if ($row_acc['quyen'] == 1) { ?>
+												<th>Lương tháng</th>
+											<?php } ?>
 											<th>Ngày công</th>
-											<th>Thực lãnh</th>
+											<?php if ($row_acc['quyen'] == 1) { ?>
+												<th>Thực lãnh</th>
+											<?php } ?>
 											<th>Ngày chấm</th>
 											<th>Chi tiết</th>
 											<th>Xóa</th>
@@ -193,9 +197,14 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 												<td><?php echo $arrS['ma_luong']; ?></td>
 												<td><?php echo $arrS['ten_nv']; ?></td>
 												<td><?php echo $arrS['ten_chuc_vu']; ?></td>
-												<td><?php echo number_format($arrS['luong_thang']) . "vnđ"; ?></td>
+												<?php if ($row_acc['quyen'] == 1) { ?>
+													<td><?php echo number_format($arrS['luong_thang']) . "vnđ"; ?></td>
+												<?php } ?>
 												<td class="text-center"><?php echo $arrS['ngay_cong']; ?></td>
-												<td style="color: blue; font-weight: bold;"><?php echo number_format($arrS['thuc_lanh']) . "vnđ"; ?></td>
+												<?php if ($row_acc['quyen'] == 1) { ?>
+													<td style="color: blue; font-weight: bold;"><?php echo number_format($arrS['thuc_lanh']) . "vnđ"; ?></td>
+												<?php } ?>
+
 												<td class="text-center">
 													<?php echo date_format(date_create($arrS['ngay_cham']), "d-m-Y"); ?>
 												</td>
