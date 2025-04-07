@@ -132,6 +132,19 @@ if (isset($_GET['p']) && isset($_GET['a'])) {
 				</ul>
 			</li>
 
+			<li class="<?php if ($p == 'bonus-discipline') echo 'active'; ?> treeview">
+				<a href="#">
+					<i class="fa fa-list"></i> <span>Công việc</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class="<?php if (($p == 'todolist-discipline') && ($a == 'list-todolist')) echo 'active'; ?>"><a href="todolist.php"><i class="fa fa-circle-o"></i>Công việc cần làm</a></li>
+
+				</ul>
+			</li>
+
 			<?php if ($row_acc['quyen'] == 1) { ?>
 				<li class="<?php if ($p == 'bonus-discipline') echo 'active'; ?> treeview">
 					<a href="#">
