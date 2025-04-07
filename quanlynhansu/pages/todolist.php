@@ -11,11 +11,11 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 
 	if (isset($_POST['edit'])) {
 		$id = $_POST['idLevel'];
-		echo "<script>location.href='sua-trinh-do.php?p=staff&a=level&id=" . $id . "'</script>";
+		echo "<script>location.href='sua-cong-viec.php?p=todolist&a=level&id=" . $id . "'</script>";
 	}
 
 	// show data
-	$showData = "SELECT id, ma_trinh_do, ten_trinh_do, ghi_chu, nguoi_tao, ngay_tao, nguoi_sua, ngay_sua FROM trinh_do ORDER BY ngay_tao DESC";
+	$showData = "SELECT id, ma_cong_viec, ten_cong_viec, mo_ta, tien_do FROM cong_viec ORDER BY id DESC";
 	$result = mysqli_query($conn, $showData);
 	$arrShow = array();
 	while ($row = mysqli_fetch_array($result)) {
@@ -35,21 +35,20 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 		// get id in form
 		$titleLevel = $_POST['titleLevel'];
 		$description = $_POST['description'];
-		$personCreate = $_POST['personCreate'];
-		$dateCreate = date("Y-m-d H:i:s");
-		$personEdit = $_POST['personCreate'];
-		$dateEdit = date("Y-m-d H:i:s");
+		$trangThai = $_POST['trangThai'];
 
 		// validate
 		if (empty($titleLevel))
-			$error['titleLevel'] = 'Vui lòng nhập <b> tên trình độ </b>';
+			$error['titleLevel'] = 'Vui lòng nhập <b> tên công việc </b>';
 
 		if (!$error) {
 			$showMess = true;
-			$insert = "INSERT INTO trinh_do(ma_trinh_do, ten_trinh_do, ghi_chu, nguoi_tao, ngay_tao, nguoi_sua, ngay_sua) VALUES('$levelCode','$titleLevel', '$description', '$personCreate', '$dateCreate', '$personEdit', '$dateEdit')";
+			$insert = "INSERT INTO cong_viec(ma_cong_viec, ten_cong_viec, mo_ta, tien_do) 
+			VALUES('$levelCode','$titleLevel', '$description', $trangThai)";
+
 			mysqli_query($conn, $insert);
-			$success['success'] = 'Thêm trình độ thành công';
-			echo '<script>setTimeout("window.location=\'trinh-do.php?p=staff&a=level\'",1000);</script>';
+			$success['success'] = 'Thêm công việc thành công';
+			echo '<script>setTimeout("window.location=\'todolist.php?p=staff&a=level\'",1000);</script>';
 		}
 	}
 
@@ -58,10 +57,10 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 		$showMess = true;
 
 		$id = $_POST['idLevel'];
-		$delete = "DELETE FROM trinh_do WHERE id = $id";
+		$delete = "DELETE FROM cong_viec WHERE id = $id";
 		mysqli_query($conn, $delete);
-		$success['success'] = 'Xóa trình độ thành công.';
-		echo '<script>setTimeout("window.location=\'trinh-do.php?p=staff&a=level\'",1000);</script>';
+		$success['success'] = 'Xóa công việc thành công.';
+		echo '<script>setTimeout("window.location=\'todolist.php?p=todolist&a=level\'",1000);</script>';
 	}
 
 ?>
@@ -78,7 +77,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 					</div>
 					<div class="modal-body">
 						<input type="hidden" name="idLevel">
-						Bạn có thực sự muốn xóa trình độ này?
+						Bạn có thực sự muốn xóa công việc này?
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
@@ -94,12 +93,12 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				Trình độ
+				Công việc
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-				<li><a href="trinh-do.php?p=staff&a=level">Trình độ</a></li>
-				<li class="active">Thêm trình độ</li>
+				<li><a href="trinh-do.php?p=staff&a=level">Công việc</a></li>
+				<li class="active">Danh sách công việc</li>
 			</ol>
 		</section>
 
@@ -109,7 +108,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 				<div class="col-xs-12">
 					<div class="box box-primary">
 						<div class="box-header with-border">
-							<h3 class="box-title">Thêm trình độ</h3>
+							<h3 class="box-title">Thêm công việc</h3>
 							<div class="box-tools pull-right">
 								<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 								<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -117,16 +116,6 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 						</div>
 						<!-- /.box-header -->
 						<div class="box-body">
-							<?php
-							// show error
-							if ($row_acc['quyen'] != 1) {
-								echo "<div class='alert alert-warning alert-dismissible'>";
-								echo "<h4><i class='icon fa fa-ban'></i> Thông báo!</h4>";
-								echo "Bạn <b> không có quyền </b> thực hiện chức năng này.";
-								echo "</div>";
-							}
-							?>
-
 							<?php
 							// show error
 							if (isset($error)) {
@@ -158,30 +147,33 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<label for="exampleInputEmail1">Mã trình độ: </label>
+											<label for="exampleInputEmail1">Mã công việc<span style="color: red;">*</span>: </label>
 											<input type="text" class="form-control" id="exampleInputEmail1" name="positionCode" value="<?php echo $levelCode; ?>" readonly>
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Tên trình độ: </label>
-											<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="titleLevel">
+											<label for="exampleInputEmail1">Tên công việc<span style="color: red;">*</span>: </label>
+											<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên công việc" name="titleLevel">
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Mô tả: </label>
+											<label for="exampleInputEmail1">Mô tả<span style="color: red;">*</span>: </label>
 											<textarea id="editor1" rows="10" cols="80" name="description">
                       </textarea>
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Người tạo: </label>
-											<input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $row_acc['ho']; ?> <?php echo $row_acc['ten']; ?>" name="personCreate" readonly>
-										</div>
-										<div class="form-group">
-											<label for="exampleInputEmail1">Ngày tạo: </label>
-											<input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="dateCreate" readonly>
+											<label>Trạng thái <span style="color: red;">*</span>: </label>
+											<select class="form-control" name="trangThai">
+												<option value="chon">--- Chọn trạng thái ---</option>
+												<option value="2">Hoàn thành</option>
+												<option value="1">Đang tiến hành</option>
+												<option value="0">Nhận việc</option>
+											</select>
+											<small style="color: red;"><?php if (isset($error['trangThai'])) {
+																			echo "Vui lòng chọn trạng thái";
+																		} ?></small>
 										</div>
 										<!-- /.form-group -->
 										<?php
-										if ($_SESSION['level'] == 1)
-											echo "<button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Thêm trình độ</button>";
+										echo "<button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Thêm việc cần làm</button>";
 										?>
 									</div>
 									<!-- /.col -->
@@ -194,7 +186,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 					<!-- /.box -->
 					<div class="box">
 						<div class="box-header">
-							<h3 class="box-title">Danh sách trình độ</h3>
+							<h3 class="box-title">Danh sách công việc</h3>
 						</div>
 						<!-- /.box-header -->
 						<div class="box-body">
@@ -203,13 +195,10 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 									<thead>
 										<tr>
 											<th>STT</th>
-											<th>Mã trình độ</th>
-											<th>Tên trình độ</th>
+											<th>Mã công việc</th>
+											<th>Tên công việc</th>
 											<th>Mô tả</th>
-											<th>Người tạo</th>
-											<th>Ngày tạo</th>
-											<th>Người sửa</th>
-											<th>Ngày sửa</th>
+											<th>Tiến độ</th>
 											<th>Sửa</th>
 											<th>Xóa</th>
 										</tr>
@@ -220,34 +209,34 @@ if (isset($_SESSION['username']) && isset($_SESSION['level'])) {
 										foreach ($arrShow as $arrS) {
 										?>
 											<tr>
+												>
 												<td><?php echo $count; ?></td>
-												<td><?php echo $arrS['ma_trinh_do']; ?></td>
-												<td><?php echo $arrS['ten_trinh_do']; ?></td>
-												<td><?php echo $arrS['ghi_chu']; ?></td>
-												<td><?php echo $arrS['nguoi_tao']; ?></td>
-												<td><?php echo $arrS['ngay_tao']; ?></td>
-												<td><?php echo $arrS['nguoi_sua']; ?></td>
-												<td><?php echo $arrS['ngay_sua']; ?></td>
+												<td><?php echo $arrS['ma_cong_viec']; ?></td>
+												<td><?php echo $arrS['ten_cong_viec']; ?></td>
+												<td><?php echo $arrS['mo_ta']; ?></td>
+												<td>
+													<?php
+													if ($arrS['tien_do'] == 2) {
+														echo '<span class="badge bg-blue"> Hoàn thành </span>';
+													} else if ($arrS['tien_do'] == 1) {
+														echo '<span class="badge bg-orange"> Đang tiến hành </span>';
+													} else {
+														echo '<span class="badge bg-red"> Nhận việc </span>';
+													}
+													?>
+												</td>
 												<th>
 													<?php
-													if ($row_acc['quyen'] == 1) {
-														echo "<form method='POST'>";
-														echo "<input type='hidden' value='" . $arrS['id'] . "' name='idLevel'/>";
-														echo "<button type='submit' class='btn bg-orange btn-flat'  name='edit'><i class='fa fa-edit'></i></button>";
-														echo "</form>";
-													} else {
-														echo "<button type='button' class='btn bg-orange btn-flat' disabled><i class='fa fa-edit'></i></button>";
-													}
+													echo "<form method='POST'>";
+													echo "<input type='hidden' value='" . $arrS['id'] . "' name='idLevel'/>";
+													echo "<button type='submit' class='btn bg-orange btn-flat'  name='edit'><i class='fa fa-edit'></i></button>";
+													echo "</form>";
 													?>
 
 												</th>
 												<th>
 													<?php
-													if ($row_acc['quyen'] == 1) {
-														echo "<button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever='" . $arrS['id'] . "'><i class='fa fa-trash'></i></button>";
-													} else {
-														echo "<button type='button' class='btn bg-maroon btn-flat' disabled><i class='fa fa-trash'></i></button>";
-													}
+													echo "<button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever='" . $arrS['id'] . "'><i class='fa fa-trash'></i></button>";
 													?>
 												</th>
 											</tr>
