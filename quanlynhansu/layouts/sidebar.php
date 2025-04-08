@@ -155,7 +155,7 @@ if (isset($_GET['p']) && isset($_GET['a'])) {
 					</a>
 					<ul class="treeview-menu">
 						<li class="<?php if (($p == 'bonus-discipline') && ($a == 'bonus')) echo 'active'; ?>">
-							<a href="khen-thuong.php?p=bonus-discipline&a=bonus"><i class="fa fa-circle-o"></i>Quản lý bảo hiểm xã hội</a>
+							<a href="bao-hiem-xa-hoi.php?p=bhxh&a=bhxh"><i class="fa fa-circle-o"></i>Quản lý bảo hiểm xã hội</a>
 						</li>
 					</ul>
 				</li>
