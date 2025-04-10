@@ -160,6 +160,21 @@ if (isset($_GET['p']) && isset($_GET['a'])) {
 					</ul>
 				</li>
 			<?php } ?>
+			<li class="<?php if ($p == 'bonus-discipline') echo 'active'; ?> treeview">
+				<a href="#">
+					<i class="fa fa-calendar"></i>
+					<span>Đơn xin phép</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class="<?php if (($p == 'bonus-discipline') && ($a == 'bonus')) echo 'active'; ?>">
+						<a href="don-xin-phep.php"><i class="fa fa-circle-o"></i>Tạo đơn xin phép</a>
+					</li>
+				</ul>
+			</li>
+
 
 			<li class="<?php if ($p == 'account') echo 'active'; ?> treeview">
 				<a href="#">
